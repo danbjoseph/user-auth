@@ -1,0 +1,26 @@
+<div class="row">
+<div class="small-6 small-offset-3 medium-4 medium-offset-4 columns">
+{{#if user}}
+  <h5>Welcome <b>{{user.user}}</b>.</h5>
+  <p>You are logged in.</p>
+  <p>
+    <form class="navbar-form" action="/logout" method="POST" >
+      <button type="submit" value="submit" class="button">Log Out</button>
+    </form>
+  </p>
+{{else}}
+
+  	<form action="/login" method="POST">
+      <label> User
+        <input type="text" name="user" id="login-user" placeholder="...">
+      </label>
+      <label> Password
+        <input type="password" name="password" id="login-password" placeholder="...">
+      </label>
+      <button type="submit" value="submit" class="button">Log In</button>
+
+  	</form>
+
+{{/if}}
+</div>
+</div>

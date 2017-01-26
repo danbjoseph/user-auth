@@ -1,0 +1,49 @@
+<!doctype html>
+<html class="no-js" lang="en" dir="ltr">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" href="/images/favicon.ico" type="image/x-icon" />
+  <title></title>
+
+  <link rel="stylesheet" href="/css/gulp.css">
+
+</head>
+<body>
+
+
+<div data-sticky-container>
+  <div class="title-bar" data-responsive-toggle="navigation-menu" data-hide-for="medium">
+    <button class="menu-icon" type="button" data-toggle></button>
+    <div class="title-bar-title">Menu</div>
+  </div>
+  <div class="top-bar custom-navigation__top-bar" id="navigation-menu" data-sticky data-options="marginTop:0;" style="width:100%">
+    <div class="top-left-bar">
+      <ul class="menu">
+      </ul>
+    </div>
+    <div class="top-bar-right">
+      <ul class="menu">
+        {{#if user}}
+        <li><a class="custom-navigation__link" href="#">Nav1</a></li>
+        <li><a class="custom-navigation__link" href="#">Nav2</a></li>
+        {{/if}}
+      </ul>
+    </div>
+  </div>
+</div>
+
+<div class="hide-for-medium custom-navigation_spacer"></div>
+
+  {{{body}}}
+
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+<script src="/js/what-input.js" ></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/foundation/6.3.0/js/foundation.min.js"></script>
+<script>
+  $(document).foundation()
+</script>
+</body>
+</html>

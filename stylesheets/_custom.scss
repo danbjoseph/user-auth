@@ -1,0 +1,33 @@
+// Preventing FOUC
+// ###############
+// http://foundation.zurb.com/sites/docs/responsive-navigation.html#preventing-fouc
+.no-js {
+  @include breakpoint(small only) {
+    .top-bar {
+      display: none;
+    }
+  }
+  @include breakpoint(medium) {
+    .title-bar {
+      display: none;
+    }
+  }
+}
+
+.custom-navigation__top-bar {
+  padding: 0;
+}
+.custom-navigation__link  {
+  background-color: transparent !important;
+  border-bottom: 4px solid transparent;
+}
+.custom-navigation__link:hover {
+  border-bottom: 4px solid #ed1b2e;
+}
+.custom-navigation__top-bar a {
+  text-decoration: none;
+  color: inherit;
+}
+.custom-navigation_spacer {
+  height: 60px;
+}
