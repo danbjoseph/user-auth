@@ -26,8 +26,11 @@
     <div class="top-bar-right">
       <ul class="menu">
         {{#if user}}
-        <li><a class="custom-navigation__link" href="#">Nav1</a></li>
-        <li><a class="custom-navigation__link" href="#">Nav2</a></li>
+        <li><a class="custom-navigation__link" href="/">Home</a></li>
+        <li><a class="custom-navigation__link" href="#">Nav</a></li>
+        {{#eq user.permissions "admin"}}
+          <li><a class="custom-navigation__link" href="/admin/users">Users</a></li>
+        {{/eq}}
         {{/if}}
       </ul>
     </div>

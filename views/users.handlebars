@@ -1,0 +1,136 @@
+
+<div id="modal" class="reveal" data-reveal>
+  <form action="/admin/user" method="POST" data-abide novalidate>
+    <h4 id="modal_title">Add user</h4>
+    <div data-abide-error class="alert callout" style="display: none;">
+      <p><i class="fi-alert"></i> There are some errors in your form.</p>
+    </div>
+      <input type="hidden" name="_method" value="" />
+      <input type="hidden" type="text" name="id" value="" />
+      <label>Username
+        <input id="user" type="text" name="user" pattern="alpha_numeric" placeholder="..." value="" required>
+      </label>
+      <label>Permissions
+        <fieldset>
+          <input type="radio" name="permissions" value="user" required checked><label for="user">user</label>
+          <input type="radio" name="permissions" value="editor" ><label for="editor">editor</label>
+          <input type="radio" name="permissions" value="admin" ><label for="admin">admin</label>
+        </fieldset>
+      </label>
+      <label>Password
+        <input id="password" type="password" name="password" placeholder="..." value="" required>
+        <span class="form-error">
+          I'm required!
+        </span>
+      </label>
+      <label>Re-enter Password
+        <input type="password" placeholder="..." data-equalto="password" value="" required>
+        <span class="form-error">
+          Hey, passwords are supposed to match!
+        </span>
+      </label>
+
+      <button type="submit" value="submit" class="button">
+        <i class="fa fa-check" aria-hidden="true"></i> Submit
+      </button>
+      <button id="modal_close" class="button secondary" data-close>
+        <i class="fa fa-ban" aria-hidden="true"></i> Cancel
+      </button>
+  </form>
+
+</div>
+
+<!-- temp spacer -->
+<div style="height:12px;"></div>
+
+<div class="row">
+  <div class="small-8 small-offset-2 medium-6 medium-offset-3 columns">
+    {{#if error}}
+      <div class="callout warning" data-closable>
+        <span><strong>Error: </strong> {{ error }}</span>
+        <button class="close-button" aria-label="Dismiss alert" type="button" data-close>
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+    {{/if}}
+    {{#if success}}
+      <div class="callout success" data-closable>
+        <span><strong>Success: </strong> {{ success }}</span>
+        <button class="close-button" aria-label="Dismiss alert" type="button" data-close>
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+    {{/if}}
+  </div>
+</div>
+
+<div class="row small-up-2 medium-up-3 large-up-4" data-equalizer>
+  <div class="column">
+    <div class="card" style="text-align:center;" data-equalizer-watch>
+      <button type="button" class="button hollow success" style="width:100%;height:100%;" onClick="addUser();">
+        <h4><i class="fa fa-plus" aria-hidden="true"></i></h4>Add user
+      </button>
+    </div>
+  </div>
+  {{#each users}}
+  <div class="column">
+    <div class="card" data-equalizer-watch>
+      <div class="card-section" style="padding-bottom:0;">
+        <h5>{{user}}<span class="subheader"> &nbsp; ({{permissions}})</span></h5>
+      </div>
+      <div class="card-section" >
+        <h5 class="subheader">
+          <!-- <i class="fa fa-user" aria-hidden="true"></i> -->
+          <div class="button-group small float-right">
+            <a class="button secondary hollow" onClick="editUser(this);" data-id="{{id}}" data-user="{{user}}" data-permissions="{{permissions}}"><i class="fa fa-fw fa-pencil"></i></a>
+            <form action="/admin/user" method="POST" style="display:inline-block;">
+              <input type="hidden" name="_method" value="DELETE" />
+              <input type="hidden" name="id" value="{{id}}" />
+              <button type="submit" value="submit" class="button alert hollow"><i class="fa fa-fw fa-trash"></i></a>
+            </form>
+          </div>
+        </h5>
+      </div>
+
+    </div>
+  </div>
+  {{/each}}
+</div>
+
+
+
+<script>
+
+var modal;
+
+window.onload = function() {
+  modal = $("#modal");
+  $("#modal_close").click(function(e) {
+    modal.find('form')[0].reset();
+    e.preventDefault(); // keeps form validation from showing all errors on next open
+  });
+}
+
+var addUser = function() {
+  modal.find('form')[0].reset();
+  $("#modal_title").text("Add user");
+  modal.find("input[name='_method']").val("");
+  modal.find("input[name='id']").prop("disabled", true);
+  $("#user").prop("disabled", false);
+  modal.find("input[type='password']").prop("required", true);
+  modal.foundation('open');
+}
+
+var editUser = function(el) {
+  modal.find('form')[0].reset();
+  $("#modal_title").text("Edit user");
+  modal.find("input[name='_method']").val("PUT");
+  modal.find("input[name='id']").prop("disabled", false).val( $(el).data("id") );
+  $("#user").prop("disabled", true).val( $(el).data("user") );
+  var permissions = "input[name='permissions'][value='" + $(el).data("permissions") + "']"
+  modal.find(permissions).prop("checked", true);
+  modal.find("input[type='password']").prop("required", false);
+  modal.foundation('open');
+}
+
+</script>
