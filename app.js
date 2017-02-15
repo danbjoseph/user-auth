@@ -1,5 +1,6 @@
 var settings = require('./settings.js');
 var fs = require('fs');
+var flow = require('flow');
 var path = require('path');
 var crypto = require('crypto');
 var sqlite3 = require('sqlite3');
@@ -70,44 +71,64 @@ var deleteUser = function(req, res) {
   }
 }
 
-
-var editUser = function(req, res) {
-  var runquery = false;
-  var query = "UPDATE users SET ";
+// # hashing the password takes a second
+// # need to let it complete before moving on
+// # when updating a user
+var updatePassword = function(req, res, cb) {
   if(req.body.password.length == 0) {
     req.flash('successMessage', " password not changed");
+    cb(req, res);
   } else {
     bcrypt.hash(req.body.password, saltRounds, function(err, hash) {
-      // if(err)
-      query += "password = " + hash + ", " ;
-      runquery = true;
+      if(err) console.log(err)
+      req.flash('successMessage', " password updated");
+      req.query += "password = '" + hash + "', " ;
+      req.runquery = true;
+      cb(req, res);
     });
   }
+}
+
+var updatePermissions = function(req, res, cb) {
   if(req.user.id == req.body.id && req.body.permissions != "admin") {
     req.flash('errorMessage', " you can't remove your own admin status");
+    cb(req, res);
   } else {
-    query += "permissions = '" + req.body.permissions + "'";
-    runquery = true;
+    req.query += "permissions = '" + req.body.permissions + "'";
+    req.runquery = true;
+    cb(req, res);
   }
-  query += " WHERE id = " + req.body.id;
-  if(runquery == true) {
-    db.run(query, function(err) {
-      if(err) {
-        //...
-        console.log(err);
-        req.flash('errorMessage', " something went wrong");
-        res.redirect('/admin/users');
-      } else {
-        req.flash('successMessage', " user updated");
-        res.redirect('/admin/users');
-      }
-    });
-  } else {
-    req.flash('errorMessage', " something went wrong");
-    res.redirect('/admin/users');
-  }
-
 }
+
+var editUser = flow.define(
+  function(req, res) {
+    req.runquery = false;
+    req.query = "UPDATE users SET ";
+    updatePassword(req, res, this);
+  }
+  ,function(req, res) {
+    updatePermissions(req, res, this);
+  }
+  ,function(req, res) {
+    if(req.runquery == true) {
+      req.query += " WHERE id = " + req.body.id;
+      db.run(req.query, function(err) {
+        if(err) {
+          //...
+          console.log(err);
+          req.flash('errorMessage', " something went wrong");
+          res.redirect('/admin/users');
+        } else {
+          req.flash('successMessage', " user updated");
+          res.redirect('/admin/users');
+        }
+      });
+    } else {
+      req.flash('errorMessage', " something went wrong");
+      res.redirect('/admin/users');
+    }
+  }
+);
 
 var listUsers = function(cb) {
   db.all('SELECT id, user, permissions FROM users', function(err, rows) {
