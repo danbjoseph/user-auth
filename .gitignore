@@ -1,6 +1,6 @@
 node_modules
 site.db
-sessions.db
+sessions
 public/fonts/*
 !public/fonts/README.md
 public/css/gulp.css

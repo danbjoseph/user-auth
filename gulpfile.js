@@ -9,12 +9,11 @@ var sassOptions = {
   outputStyle: 'expanded'
 };
 var autoprefixerOptions = {
-  browsers: ['last 2 versions', 'ie >= 9', 'and_chr >= 2.3']
+  browsers: ['last 2 versions', 'ie >= 9', 'Android >= 2.3', 'ios >= 7']
 };
 
 gulp.task('sass', function() {
-  return gulp
-    .src(sassInput)
+  return gulp.src(sassInput)
     .pipe(sass(sassOptions).on('error', sass.logError))
     .pipe(autoprefixer(autoprefixerOptions))
     .pipe(gulp.dest('./public/css'));
